@@ -77,9 +77,11 @@ public:
             throw std::runtime_error("Invalid vertex");
         }
         if (!is_directed_) {
+            Graph::addEdge(from, to);
             adj_list_[from].push_back(to);
             adj_list_[to].push_back(from);
         } else {
+            Graph::addEdge(from, to);
             adj_list_[from].push_back(to);
         }
     }
@@ -98,14 +100,14 @@ namespace GraphProcessing {
     const int NO_WAY = -1;
 
     void dfsVisit(const Graph& g, Vertex v, std::vector<VertexMark>& color,
-            std::vector<Vertex>& result) {
+            std::vector<Vertex>& component) {
         color[v] = GRAY;
         for (Vertex u : g.getNeighbors(v)) {
             if (color[u] == WHITE) {
-                dfsVisit(g, u, color, result);
+                dfsVisit(g, u, color, component);
             }
         }
-        result.push_back(v);
+        component.push_back(v);
         color[v] = BLACK;
     }
 
