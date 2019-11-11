@@ -97,24 +97,20 @@ namespace GraphProcessing {
     enum VertexMark {NOT_VISITED, WHITE, BLACK};
 
     bool dfsVisit(const Graph& g, Vertex v, std::vector<VertexMark>& color) {
-        VertexMark current_color;
-        if (color[v] == WHITE) {
-            current_color = BLACK;
-        } else {
-            current_color = WHITE;
-        }
+        VertexMark neighbor_color;
+        neighbor_color =  (color[v] == WHITE) ? BLACK : WHITE;
         for (Vertex u : g.getNeighbors(v)) {
             if (color[u] == NOT_VISITED) {
-                color[u] = current_color;
+                color[u] = neighbor_color;
                 dfsVisit(g, u, color);
-            } else if (color[u] != current_color) {
+            } else if (color[u] != neighbor_color) {
                 return false;
             }
         }
         return true;
     }
 
-    bool isGoodForFloyd(const Graph& g) {
+    bool checkForBipartite(const Graph& g) {
         std::vector<VertexMark> color(g.getVertexCount(), NOT_VISITED);
         for (Vertex v = 0; v < g.getVertexCount(); ++v) {
             if (!dfsVisit(g, v, color)) {
@@ -142,7 +138,7 @@ int main() {
         graph.addEdge(--from, --to);
     }
 
-    if (GraphProcessing::isGoodForFloyd(graph)) {
+    if (GraphProcessing::checkForBipartite(graph)) {
         std::cout << "YES";
     } else {
         std::cout << "NO";
